@@ -2,14 +2,13 @@
 # -*- coding: utf-8 -*-
 #
 
-import zipfile
-import os
+from zipfile import ZipFile
 import tempfile
 import shutil
 
 def extract(zip_fn, fn):
 	'''extracts the contents of the given file from the given zip file'''
-	with zipfile.ZipFile(zip_fn) as z:
+	with ZipFile(zip_fn) as z:
 		with z.open(fn) as f:
 			return f.read()
 
@@ -23,7 +22,7 @@ def intract(old_name, new_data, data_file, new_name):
 	#since zipfile cannot delete files from a zip archive, we have to
 	#remake the archive with the 'deleted' file omitted
 	tempname = tempfile.mktemp()
-	with zipfile.ZipFile(old_name, 'r') as zipread, zipfile.ZipFile(tempname, 'w') as zipwrite:
+	with ZipFile(old_name, 'r') as zipread, ZipFile(tempname, 'w') as zipwrite:
 		for item in zipread.infolist():
 			if item.filename != data_file:
 				data = zipread.read(item.filename)
@@ -43,5 +42,7 @@ def template(template_filename, data, new_filename):
 	'''auto choose the data file name based on the extension'''
 	if template_filename.endswith('.odt'):
 		_template(template_filename, data, new_filename, 'content.xml')
+	elif template_filename.endswith('.docx'):
+		_template(template_filename, data, new_filename, 'word/document.xml')
 	else:
-		raise ValueError("only .odt files are supported at the moment")
+		raise ValueError("only .docx and.odt files are supported at the moment")

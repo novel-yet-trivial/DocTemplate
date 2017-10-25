@@ -10,3 +10,10 @@ data = dict(
 	)
 
 template.template("Example.odt", data, "output.odt")
+
+
+data = dict(
+	first = "Vincent"
+	)
+
+template.template("Example.docx", data, "output.docx")
