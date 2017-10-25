@@ -3,8 +3,6 @@
 #
 
 import zipfile
-import os
-import tempfile
 import shutil
 
 def extract(zip_fn, fn):
@@ -22,14 +20,12 @@ def intract(old_name, new_data, data_file, new_name):
 	"""
 	#since zipfile cannot delete files from a zip archive, we have to
 	#remake the archive with the 'deleted' file omitted
-	tempname = tempfile.mktemp()
-	with zipfile.ZipFile(old_name, 'r') as zipread, zipfile.ZipFile(tempname, 'w') as zipwrite:
+	with zipfile.ZipFile(old_name, 'r') as zipread, zipfile.ZipFile(new_name, 'w') as zipwrite:
 		for item in zipread.infolist():
 			if item.filename != data_file:
 				data = zipread.read(item.filename)
 				zipwrite.writestr(item, data)
 		zipwrite.writestr(data_file, new_data)
-	shutil.move(tempname, new_name)
 
 def _template(old_fn, data, new_fn, data_file):
 	'''generic version'''
