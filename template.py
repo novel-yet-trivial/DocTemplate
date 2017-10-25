@@ -9,9 +9,9 @@ import shutil
 
 def extract(zip_fn, fn):
 	'''extracts the contents of the given file from the given zip file'''
-	z = zipfile.ZipFile(zip_fn)
-	with z.open(fn) as f:
-		return f.read()
+	with zipfile.ZipFile(zip_fn) as z:
+		with z.open(fn) as f:
+			return f.read()
 
 def intract(old_name, new_data, data_file, new_name):
 	"""add the data to the zipfile with the given filename, overwriting any file
@@ -38,7 +38,16 @@ def _template(old_fn, data, new_fn, data_file):
 	intract(old_fn, new_data, data_file, new_fn)
 
 def template(template_filename, data, new_filename):
+	'''auto choose the data file name based on the extension'''
 	if template_filename.endswith('.odt'):
 		_template(template_filename, data, new_filename, 'content.xml')
 	else:
 		raise ValueError("only .odt files are supported at the moment")
+
+data = dict(
+	firstname = "Vincent",
+	address = "123 Main St."
+	)
+
+template("Example.odt", data, "output.odt")
+
