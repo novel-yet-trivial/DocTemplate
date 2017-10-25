@@ -34,6 +34,8 @@ def intract(old_name, new_data, data_file, new_name):
 def _template(old_fn, data, new_fn, data_file):
 	'''generic version'''
 	template_data = extract(old_fn, data_file)
+	if not isinstance(template_data, str): # python3 check and fix
+		template_data = template_data.decode()
 	new_data = template_data.format(**data)
 	intract(old_fn, new_data, data_file, new_fn)
 
@@ -43,11 +45,3 @@ def template(template_filename, data, new_filename):
 		_template(template_filename, data, new_filename, 'content.xml')
 	else:
 		raise ValueError("only .odt files are supported at the moment")
-
-data = dict(
-	firstname = "Vincent",
-	address = "123 Main St."
-	)
-
-template("Example.odt", data, "output.odt")
-
